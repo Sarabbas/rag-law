@@ -12,6 +12,9 @@ import asyncio
 import uvicorn
 from dotenv import load_dotenv
 
+from .embeddings import get_embeddings,initialize_vectorstores
+from .utils import route_query
+
 #loading env variable
 load_dotenv()
 huggingface_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
@@ -27,25 +30,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-#embedding model
-embeddings = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-base", model_kwargs={"device": "cuda"})
-
-#initializing 2 index db
-qdrant_english = Qdrant.from_documents(
-    text_splitter.split_documents(PyPDFLoader("/docs/Executive Regulation Law No 6-2016 - English.pdf").load()),
-    embeddings,
-    location=":memory:",
-    collection_name="law_documents_en",
-)
-
-qdrant_arabic = Qdrant.from_documents(
-    text_splitter.split_documents(PyPDFLoader("/docs/Executive Regulation Law No 6-2016.pdf").load()),
-    embeddings,
-    location=":memory:",
-    collection_name="law_documents_ar",
-)
-
 
 #llm
 # llm = HuggingFaceHub(
