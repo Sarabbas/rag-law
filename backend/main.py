@@ -7,12 +7,14 @@ from langchain.chains import RetrievalQA, LLMChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.llms import HuggingFaceHub
 import asyncio
 import uvicorn
 from dotenv import load_dotenv
 
 #loading env variable
 load_dotenv()
+huggingface_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 #creating fastapi app
 app = FastAPI()
@@ -43,3 +45,22 @@ qdrant_arabic = Qdrant.from_documents(
     location=":memory:",
     collection_name="law_documents_ar",
 )
+
+
+#llm
+# llm = HuggingFaceHub(
+#     repo_id="Qwen/Qwen2-7B"
+#     model_kwargs={"temperature": 0.3, "max_length": 1024},
+#     huggingfacehub_api_token=huggingface_token
+# )
+
+llm = HuggingFaceHub(
+    repo_id="Qwen/Qwen2-7B",
+    model_kwargs={"temperature": 0.3, "max_length": 512, "device": "cuda"},  # Reduce max_length
+    huggingfacehub_api_token=huggingface_token
+)
+
+#conversation memory
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+
