@@ -1,16 +1,18 @@
-version: '3.8'
 
+version: '3'
 services:
   backend:
-    build: ./backend
+    build: saraabbas292/rag-law-backend:latest
     ports:
       - "7000:7000"
     volumes:
       - ./backend:/app
+    env_file:
+      - ./backend/.env
 
   frontend:
-    build: ./frontend
+    build: saraabbas292/rag-law-frontend:latest
     ports:
-      - "7070:80"
+      - "7070:7070"
     depends_on:
       - backend
