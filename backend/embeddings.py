@@ -12,6 +12,9 @@ def initialize_vectorstores():
     embeddings = get_embeddings()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 
+    
+
+
     qdrant_english = Qdrant.from_documents(
         text_splitter.split_documents(PyPDFLoader("/docs/Executive Regulation Law No 6-2016 - English.pdf").load()),
         embeddings,
