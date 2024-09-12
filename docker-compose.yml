@@ -1,4 +1,14 @@
-frontend:
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
     build: ./frontend
     ports:
       - "7070:80"
