@@ -8,13 +8,13 @@ from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import HuggingFaceHub
-
+import os
 import asyncio
 import uvicorn
 from dotenv import load_dotenv
 
-from .embeddings import get_embeddings,initialize_vectorstores
-from .utils import route_query
+from embeddings import get_embeddings,initialize_vectorstores
+from utils import route_query
 
 #loading env variable
 load_dotenv()
