@@ -51,7 +51,7 @@ async def startup_event():
     # Initialize embeddings and vectorstores
     embeddings = await asyncio.to_thread(get_embeddings)
     print("Embedding model Loaded ..........................................................")
-    qdrant_english, qdrant_arabic = await asyncio.to_thread(initialize_vectorstores)
+    qdrant_english, qdrant_arabic = await initialize_vectorstores()
     print("EN AR vectorstores Initialized ..........................................................")
     print(qdrant_english, qdrant_arabic)
 
