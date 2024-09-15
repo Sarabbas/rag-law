@@ -1,3 +1,5 @@
-.env
+backend/.env
 .venv
-/backend/test.py
+test.py
+backend/venv
+backend/__pycache__

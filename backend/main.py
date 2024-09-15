@@ -32,38 +32,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#llm
-# llm = HuggingFaceHub(
-#     repo_id="Qwen/Qwen2-7B"
-#     model_kwargs={"temperature": 0.3, "max_length": 1024},
-#     huggingfacehub_api_token=huggingface_token
-# )
+llm = None
+embeddings = None
+qdrant_english = None
+qdrant_arabic = None
 
-llm = HuggingFaceHub(
-    repo_id="Qwen/Qwen2-7B",
-    model_kwargs={"temperature": 0.3, "max_length": 512, "device": "cuda"},  # Reduce max_length
-    huggingfacehub_api_token=huggingface_token
-)
+@app.on_event("startup")
+async def startup_event():
+    global llm, embeddings, qdrant_english, qdrant_arabic
 
+    # Use async functions for initialization if available
+    llm = await asyncio.to_thread(lambda: HuggingFaceHub(
+        repo_id="Qwen/Qwen2-7B",
+        model_kwargs={"temperature": 0.3, "max_length": 512}, # Reduce max_length
+        huggingfacehub_api_token=huggingface_token
+    ))
 
+    # Initialize embeddings and vectorstores
+    embeddings = await asyncio.to_thread(get_embeddings)
+    print("Embedding model Loaded ..........................................................")
+    qdrant_english, qdrant_arabic = await asyncio.to_thread(initialize_vectorstores)
+    print("EN AR vectorstores Initialized ..........................................................")
+    print(qdrant_english, qdrant_arabic)
 
-prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    # Set up prompt template
+    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
-{context}
+    {context}
 
-Question: {question}
-Answer: """
+    Question: {question}
+    Answer: """
 
-PROMPT = PromptTemplate(
-    template=prompt_template, input_variables=["context", "question"]
-)
+    global PROMPT
+    PROMPT = PromptTemplate(
+        template=prompt_template, input_variables=["context", "question"]
+    )
 
 #conversation memory
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-embeddings = get_embeddings()
-qdrant_english, qdrant_arabic = initialize_vectorstores()
-
+# embeddings = get_embeddings()
+# qdrant_english, qdrant_arabic = initialize_vectorstores()
+# print(qdrant_english,qdrant_arabic)
 
 
 @app.websocket("/ws")
