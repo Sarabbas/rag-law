@@ -1,6 +1,7 @@
 services:
-  backend:
-    build: ./backend/
+  backend: 
+    # build: ./backend/
+    image: saraabbas292/rag-law-backend:latest
     ports:
       - "7000:7000"
     volumes:

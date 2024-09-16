@@ -8,7 +8,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 def get_embeddings():
-    return HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-base")
+    return HuggingFaceEmbeddings(model_name="paraphrase-multilingual-MiniLM-L12-v2")
 
 def load_and_split(pdf_path, text_splitter):
     loader = PyPDFLoader(pdf_path)
@@ -17,7 +17,7 @@ def load_and_split(pdf_path, text_splitter):
 
 async def initialize_vectorstores():
     embeddings = get_embeddings()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=30)
 
     # Initialize Qdrant client
     qdrant_client = QdrantClient(url="http://qdrant:6333")
@@ -36,7 +36,7 @@ async def initialize_vectorstores():
 
     # Recreate collections and insert documents
     qdrant_english = Qdrant.from_documents(
-        docs_en,
+        docs_en[:100],
         embeddings,
         url="http://qdrant:6333",
         collection_name=en_collection_name,
@@ -44,7 +44,7 @@ async def initialize_vectorstores():
     )
 
     qdrant_arabic = Qdrant.from_documents(
-        docs_ar,
+        docs_ar[:100],
         embeddings,
         url="http://qdrant:6333",
         collection_name=ar_collection_name,
