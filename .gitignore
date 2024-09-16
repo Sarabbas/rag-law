@@ -3,3 +3,4 @@ backend/.env
 test.py
 backend/venv
 backend/__pycache__
+backend/requirements.in

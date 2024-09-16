@@ -1,6 +1,6 @@
 services:
   backend:
-    image: saraabbas292/rag-law-backend:latest
+    build: ./backend/
     ports:
       - "7000:7000"
     volumes:
@@ -8,10 +8,10 @@ services:
     env_file:
       - ./backend/.env
     depends_on:
-      - qdrant 
+      - qdrant
 
   frontend:
-    image: saraabbas292/rag-law-frontend:latest
+    build: ./frontend/
     ports:
       - "7070:80"
     depends_on:
@@ -23,7 +23,7 @@ services:
     ports:
       - "6333:6333"
     volumes:
-      - qdrant_storage:/qdrant/storage 
+      - qdrant_storage:/qdrant/storage
 
 volumes:
   qdrant_storage:

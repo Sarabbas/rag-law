@@ -1,0 +1,24 @@
+# Ignore log files
+*.log
+
+# Ignore node_modules and other dependencies
+node_modules
+venv
+__pycache__
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+
+# Ignore environment files
+.env
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore IDE configurations
+*.swp
+*.swo
+.vscode/
+.idea/

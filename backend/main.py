@@ -52,6 +52,7 @@ async def startup_event():
     embeddings = await asyncio.to_thread(get_embeddings)
     print("Embedding model Loaded ..........................................................")
     qdrant_english, qdrant_arabic = await initialize_vectorstores()
+    
     print("EN AR vectorstores Initialized ..........................................................")
     print(qdrant_english, qdrant_arabic)
 
@@ -84,7 +85,7 @@ async def websocket_endpoint(websocket: WebSocket):
             question = await websocket.receive_text()
             
             # Route the query
-            routed_retriever = route_query(question)
+            routed_retriever = route_query(question,qdrant_english,qdrant_arabic)
             
             # Retrieve relevant documents
             docs = routed_retriever.get_relevant_documents(question)
